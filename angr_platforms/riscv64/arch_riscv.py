@@ -33,7 +33,7 @@ class ArchRISCV(Arch):
     lr_offset = 8    # lr(x1)
     ret_offset = 80  # a0(x10) For return value
 
-    self.branch_delay_slot = False
+    branch_delay_slot = False
 
     syscall_num_offset = 136
     # a7(x17) For syscall number
