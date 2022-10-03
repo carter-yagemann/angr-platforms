@@ -11,9 +11,9 @@ class Instruction_CBEQZ(CB_Instruction):
     def compute_result(self, src1):
         imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3], self.data["O"][4], self.data['O'][0:2],
                                        self.data['I'][0])
-        offset = self.constant(BitArray(bin=imm).int, Type.int_32)
+        offset = self.constant(BitArray(bin=imm).int, Type.int_64)
         addr = self.addr + offset
-        self.jump(src1 == self.constant(0, Type.int_32), addr)
+        self.jump(src1 == self.constant(0, Type.int_64), addr)
 
 
 class Instruction_CBNEZ(CB_Instruction):
@@ -24,9 +24,9 @@ class Instruction_CBNEZ(CB_Instruction):
     def compute_result(self, src1):
         imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3], self.data["O"][4], self.data['O'][0:2],
                                        self.data['I'][0])
-        offset = self.constant(BitArray(bin=imm).int, Type.int_32)
+        offset = self.constant(BitArray(bin=imm).int, Type.int_64)
         addr = self.addr + offset
-        self.jump(src1 != self.constant(0, Type.int_32), addr)
+        self.jump(src1 != self.constant(0, Type.int_64), addr)
 
 
 class Instruction_CANDI(CB_Instruction):
@@ -41,7 +41,7 @@ class Instruction_CANDI(CB_Instruction):
 
     def compute_result(self, src1):
         str_offset = '{0}{1}'.format(self.data['I'][0], self.data['O'])
-        imm = self.constant(BitArray(bin=str_offset).int, Type.int_32)
+        imm = self.constant(BitArray(bin=str_offset).int, Type.int_64)
         dst = int(self.data['s'], 2) + 8
         self.put(src1 & imm, dst)
 
@@ -60,7 +60,7 @@ class Instruction_CSRLI(CB_Instruction):
 
     def compute_result(self, src1):
         shftamnt = self.constant(BitArray(bin=self.data['O']).uint, Type.int_8)
-        result = (src1 >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+        result = (src1 >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
         dst = int(self.data['s'], 2) + 8
         self.put(result, dst)
 
@@ -79,6 +79,6 @@ class Instruction_CSRAI(CB_Instruction):
     # Once again not don't know how to do the arithmetic shift
     def compute_result(self, src1):
         shftamnt = self.constant(BitArray(bin=self.data['O']).uint, Type.int_8)
-        result = (~((~src1) >> shftamnt)) & self.constant(0xffffffff, Type.int_32)
+        result = (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
         dst = int(self.data['s'], 2) + 8
         self.put(result, dst)

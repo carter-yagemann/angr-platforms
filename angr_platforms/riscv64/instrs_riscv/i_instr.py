@@ -51,7 +51,7 @@ class Instruction_SLLI(I_Instruction):
         return data
 
     def compute_result(self, src1, _):
-        return (src1 << self.get_shift_amount()) & self.constant(0xffffffff, Type.int_32)
+        return (src1 << self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SRLI(I_Instruction):
@@ -66,7 +66,7 @@ class Instruction_SRLI(I_Instruction):
         return data
 
     def compute_result(self, src1, _):
-        return (src1 >> self.get_shift_amount()) & self.constant(0xffffffff, Type.int_32)
+        return (src1 >> self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 # Once again issue with arithmetic right shifts, so for the moment still a TODO like SRA
@@ -82,7 +82,7 @@ class Instruction_SRAI(I_Instruction):
         return data
 
     def compute_result(self, src1, _):
-        return (~((~src1) >> self.get_shift_amount())) & self.constant(0xffffffff, Type.int_32)
+        return (~((~src1) >> self.get_shift_amount())) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SLTI(I_Instruction):
@@ -96,7 +96,7 @@ class Instruction_SLTI(I_Instruction):
         src1.is_signed = True
         imm.is_signed = True
         val = 1 if src1.signed < imm.signed else 0
-        return self.constant(val, Type.int_32)
+        return self.constant(val, Type.int_64)
 
 
 class Instruction_SLTIU(I_Instruction):
@@ -108,7 +108,7 @@ class Instruction_SLTIU(I_Instruction):
         src1.is_signed = False
         imm.is_signed = False
         val = 1 if src1 < imm else 0
-        return self.constant(val, Type.int_32)
+        return self.constant(val, Type.int_64)
 
 class Instruction_LB(I_Instruction):
     func3='000'
@@ -166,8 +166,8 @@ class Instruction_JALR(I_Instruction):
     name='JALR'
 
     def compute_result(self, src, imm):
-        return_addr = self.addr + self.constant(4, Type.int_32)
-        addr = (src + imm.value) & self.constant(0xffff_fffe, Type.int_32)
+        return_addr = self.addr + self.constant(4, Type.int_64)
+        addr = (src + imm.value) & self.constant(0xffff_ffff_ffff_fffe, Type.int_64)
         self.jump(None, addr, JumpKind.Call)
         return return_addr
 
@@ -208,9 +208,9 @@ class Instruction_ECALL(I_Instruction):
     name = 'ecall'
 
     def compute_result(self, data, bitstream):
-        return_addr = self.addr + self.constant(4, Type.int_32)
-        sp_addr = self.get('sp', Type.int_32)
-        self.put(self.constant(0xfffffffc, Type.int_32), 'sp')
+        return_addr = self.addr + self.constant(4, Type.int_64)
+        sp_addr = self.get('sp', Type.int_64)
+        self.put(self.constant(0xfffffffffffffffc, Type.int_64), 'sp')
         self.jump(None, self.constant(0x80000180, Type.int_32), JumpKind.Syscall)
         self.put(sp_addr, 'sp')
         return return_addr

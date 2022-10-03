@@ -10,7 +10,7 @@ class Instruction_CSW(CS_Instruction):
 
     def compute_result(self, src1, src2):
         imm_str = "{2}{1}{0}00".format(self.data['i'][0], self.data['I'], self.data['i'][1])
-        offset = self.constant(BitArray(bin=imm_str).int, Type.int_32)  # TODO check if this is a mistake
+        offset = self.constant(BitArray(bin=imm_str).int, Type.int_64)
         self.store(src1, offset + src2)
 
 class Instruction_CSUB(CS_Instruction):

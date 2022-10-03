@@ -19,7 +19,7 @@ class Instruction_CADDI(CI_Instruction):
 
     def compute_result(self, src1):
         bitstr = '{0}{1}'.format(self.data['I'], self.data['i'])
-        val = self.constant(BitArray(bin=bitstr).int, Type.int_32)
+        val = self.constant(BitArray(bin=bitstr).int, Type.int_64)
         self.put(val.signed + src1, self.get_dst())
 
 
@@ -46,7 +46,7 @@ class Instruction_CLI(CI_Instruction):
 
     def compute_result(self, _):
         imm = BitArray(bin='{0}{1}'.format(self.data['I'], self.data['i'])).int
-        val = self.constant(imm, Type.int_32).signed
+        val = self.constant(imm, Type.int_64).signed
         self.put(val, self.get_dst())
 
 class Instruction_CLUI(CI_Instruction):
@@ -63,7 +63,7 @@ class Instruction_CLUI(CI_Instruction):
 
     def compute_result(self, _):
         imm = BitArray(bin='{0}{1}000000000000'.format(self.data['I'], self.data['i'])).int
-        val = self.constant(imm, Type.int_32).signed
+        val = self.constant(imm, Type.int_64).signed
         self.put(val, self.get_dst())
 
 
@@ -80,7 +80,7 @@ class Instruction_CADDI16SP(CI_Instruction):
     def compute_result(self, sp):
         i = self.data['i']
         immstr = '{0}{1}{2}{3}{4}0000'.format(self.data['I'], i[2:4], i[1], i[4], i[0])
-        result = sp + self.constant(BitArray(bin=immstr).int, Type.int_32).signed
+        result = sp + self.constant(BitArray(bin=immstr).int, Type.int_64).signed
         self.put(result, 2)
 
 
@@ -99,5 +99,5 @@ class Instruction_CSLLI(CI_Instruction):
     def compute_result(self, src1):
         data = '{0}{1}'.format(self.data['I'], self.data['i'])
         imm = self.constant(BitArray(bin=data).uint, Type.int_8)
-        res = (src1 << imm) & self.constant(0xffffffff, Type.int_32)
+        res = (src1 << imm) & self.constant(0xffffffffffffffff, Type.int_64)
         self.put(res, self.get_dst())

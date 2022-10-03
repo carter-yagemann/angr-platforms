@@ -7,7 +7,7 @@ class Instruction_JAL(J_Instruction):
     name='JAL'
 
     def compute_result(self, imm):
-        return_addr = self.addr + self.constant(4, Type.int_32)
+        return_addr = self.addr + self.constant(4, Type.int_64)
         addr = self.addr+imm
-        self.jump(None, self.constant(addr, Type.int_32))
+        self.jump(None, self.constant(addr, Type.int_64))
         return return_addr

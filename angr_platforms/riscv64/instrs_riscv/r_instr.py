@@ -60,7 +60,7 @@ class Instruction_SLL(R_Instruction):
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
-        return (src1 << shftamnt) & self.constant(0xffffffff, Type.int_32)
+        return (src1 << shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SRL(R_Instruction):
@@ -71,7 +71,7 @@ class Instruction_SRL(R_Instruction):
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
-        return (src1 >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+        return (src1 >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
 
 # Arithmetic shift is not easily mapped, so leaving this as an TODO
 
@@ -84,7 +84,7 @@ class Instruction_SRA(R_Instruction):
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
-        return (~((~src1) >> shftamnt)) & self.constant(0xffffffff, Type.int_32)
+        return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SLT(R_Instruction):
@@ -97,7 +97,7 @@ class Instruction_SLT(R_Instruction):
         src1.is_signed = True
         src2.is_signed = True
         val = 1 if src1 < src2 else 0
-        return self.constant(val, Type.int_32)
+        return self.constant(val, Type.int_64)
 
 
 class Instruction_SLTU(R_Instruction):
@@ -110,7 +110,7 @@ class Instruction_SLTU(R_Instruction):
         src1.is_signed = False
         src1.is_signed = False
         val = 1 if src1 < src2 else 0
-        return self.constant(val, Type.int_32)
+        return self.constant(val, Type.int_64)
 
 
 class Instruction_MUL(R_Instruction):
@@ -120,7 +120,7 @@ class Instruction_MUL(R_Instruction):
     name='MUL'
 
     def compute_result(self, src1, src2):
-        return (src1*src2) & self.constant(0xFFFF_FFFF, Type.int_32)
+        return (src1*src2) & self.constant(0xFFFF_FFFF_FFFF_FFFF, Type.int_64)
 
 class Instruction_MULH(R_Instruction):
     func3='001'
@@ -140,7 +140,7 @@ class Instruction_MULSU(R_Instruction):
     def compute_result(self, src1, src2):
         src1 = src1.signed
         src2.is_signed = False
-        return (src1*src2) & self.constant(0xFFFF_FFFF, Type.int_32)
+        return (src1*src2) & self.constant(0xFFFF_FFFF_FFFF_FFFF, Type.int_64)
 
 class Instruction_MULHU(R_Instruction):
     func3='011'

@@ -31,7 +31,7 @@ class Instruction_CJALR(CR_Instruction):
         return data
 
     def compute_result(self, _, src2):
-        self.put(self.addr + self.constant(2, Type.int_32), 1)
+        self.put(self.addr + self.constant(2, Type.int_64), 1)
         self.jump(None, src2)
 
 

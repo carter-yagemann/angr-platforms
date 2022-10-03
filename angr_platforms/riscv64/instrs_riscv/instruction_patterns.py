@@ -41,10 +41,10 @@ class R_Instruction(RISCV_Instruction):
         return int(self.data['d'], 2)
 
     def get_src1(self):
-        return self.get(int(self.data['s'], 2), Type.int_32)
+        return self.get(int(self.data['s'], 2), Type.int_64)
 
     def get_src2(self):
-        return self.get(int(self.data['S'], 2), Type.int_32)
+        return self.get(int(self.data['S'], 2), Type.int_64)
 
     def fetch_operands(self):
         return self.get_src1(), self.get_src2()
@@ -87,11 +87,11 @@ class I_Instruction(RISCV_Instruction):
         return int(self.data['d'], 2)
 
     def get_src(self):
-        return self.get(int(self.data['s'], 2), Type.int_32)
+        return self.get(int(self.data['s'], 2), Type.int_64)
 
     def get_imm(self):
         data = BitArray(bin="{0}{1}".format(self.data['i'], self.data['I'])).int
-        return self.constant(data, Type.int_32)
+        return self.constant(data, Type.int_64)
 
     def get_shift_amount(self):
         num = BitArray(bin=self.data['I']).int
@@ -135,7 +135,7 @@ class S_Instruction(RISCV_Instruction):
     #'''This is the address + offset'''
 
     def get_addr(self):
-        addr = self.get(int(self.data['s'], 2), Type.int_32)
+        addr = self.get(int(self.data['s'], 2), Type.int_64)
 
         offset = BitArray(bin='{0}{1}'.format(self.data['I'], self.data['i'])).int
         return addr + offset
@@ -143,7 +143,7 @@ class S_Instruction(RISCV_Instruction):
     #'''Value is returned as int32 caller must cast it to store half words or bytes'''
 
     def get_val(self):
-        return self.get(int(self.data['S'], 2), Type.int_32)
+        return self.get(int(self.data['S'], 2), Type.int_64)
 
     def fetch_operands(self):
         return (self.get_val(),)
@@ -178,10 +178,10 @@ class B_Instruction(RISCV_Instruction):
         return True
 
     def get_src1(self):
-        return self.get(int(self.data['s'], 2), Type.int_32)
+        return self.get(int(self.data['s'], 2), Type.int_64)
 
     def get_src2(self):
-        return self.get(int(self.data['S'], 2), Type.int_32)
+        return self.get(int(self.data['S'], 2), Type.int_64)
 
     #''' The offset for B instructions is as follows inst[31]inst[7]inst[30:25]inst[11:8] just had to be carefull with the endianness'''
 
@@ -299,10 +299,10 @@ class CR_Instruction(RISCV_Instruction):
         return True
 
     def get_src1(self):
-        return self.get(int(self.data['s'], 2), Type.int_32)
+        return self.get(int(self.data['s'], 2), Type.int_64)
 
     def get_src2(self):
-        return self.get(int(self.data['d'], 2), Type.int_32)
+        return self.get(int(self.data['d'], 2), Type.int_64)
 
     def get_dst_addr(self):
         return int(self.data['d'], 2)
@@ -340,7 +340,7 @@ class CI_Instruction(RISCV_Instruction):
         return int(self.data['s'], 2)
 
     def fetch_operands(self):
-        return (self.get(self.get_dst(), Type.int_32),)
+        return (self.get(self.get_dst(), Type.int_64),)
 
 
 class CIW_Instruction(RISCV_Instruction):
@@ -397,7 +397,7 @@ class CL_Instruction(RISCV_Instruction):
         return True
 
     def get_src1(self):
-        return self.get(int(self.data['s'], 2) + 8, Type.int_32)
+        return self.get(int(self.data['s'], 2) + 8, Type.int_64)
 
     def get_dst_addr(self):
         return int(self.data['d'], 2) + 8
@@ -433,8 +433,8 @@ class CS_Instruction(RISCV_Instruction):
         return True
 
     def fetch_operands(self):
-        src1 = self.get(int(self.data['s'], 2) + 8, Type.int_32)
-        src2 = self.get(int(self.data['S'], 2) + 8, Type.int_32)
+        src1 = self.get(int(self.data['s'], 2) + 8, Type.int_64)
+        src2 = self.get(int(self.data['S'], 2) + 8, Type.int_64)
         return src1, src2
 
     def commit_result(self, res):
@@ -471,7 +471,7 @@ class CB_Instruction(RISCV_Instruction):
         return True
 
     def fetch_operands(self):
-        return (self.get(int(self.data['s'], 2) + 8, Type.int_32),)
+        return (self.get(int(self.data['s'], 2) + 8, Type.int_64),)
 
 
 class CJ_Instruction(RISCV_Instruction):
@@ -501,5 +501,5 @@ class CJ_Instruction(RISCV_Instruction):
     def fetch_operands(self):
         i = self.data['j']
         parsed = "{0}{1}{2}{3}{4}{5}{6}{7}0".format(i[0], i[4], i[2:4], i[6], i[5], i[10], i[1], i[7:10])
-        val = self.constant(BitArray(bin=parsed).int, Type.int_32)
+        val = self.constant(BitArray(bin=parsed).int, Type.int_64)
         return (val.signed,)
