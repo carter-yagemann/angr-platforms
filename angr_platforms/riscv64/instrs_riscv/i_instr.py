@@ -140,6 +140,16 @@ class Instruction_LW(I_Instruction):
         value = self.load(addr, Type.int_32)
         return value.signed
 
+class Instruction_LD(I_Instruction):
+    func3 = '011'
+    opcode = '0000011'
+    name = 'LD'
+
+    def compute_result(self, src, imm):
+        addr = src + imm.signed
+        value = self.load(addr, Type.int_64)
+        return value
+
 class Instruction_LBU(I_Instruction):
     func3='100'
     opcode = '0000011'

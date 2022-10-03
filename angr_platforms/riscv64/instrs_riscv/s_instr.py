@@ -24,4 +24,12 @@ class Instruction_SW(S_Instruction):
     name='SW'
 
     def compute_result(self, val):
+        return val.cast_to(Type.int_32)
+
+class Instruction_SD(S_Instruction):
+    func3 = '011'
+    opcode = '0100011'
+    name = 'SD'
+
+    def compute_result(self, val):
         return val
