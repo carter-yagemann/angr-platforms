@@ -444,6 +444,30 @@ class CS_Instruction(RISCV_Instruction):
         return int(self.data['s'], 2) + 8
 
 
+class CSS_Instruction(RISCV_Instruction):
+    '''
+    bin_format:
+    o = opcode 2 bits
+    s = src1 5 bits
+    i = imm 6 bits
+    f = func3 3 bits
+    '''
+    opcode = NotImplemented
+    func3 = NotImplemented
+
+    bin_format = NotImplemented
+
+    def __init__(self, bitstrm, arch, addr):
+        self.bin_format = "{0}iiiiiisssss{1}".format(self.func3, self.opcode)
+        super().__init__(bitstrm, arch, addr)
+
+    def match_instruction(self, data, bitstream):
+        if hasattr(self, "extra_constraints"):
+            # pylint: disable=E1101
+            self.extra_constraints(data, bitstream)
+        return True
+
+
 class CB_Instruction(RISCV_Instruction):
     '''
     bin_format:

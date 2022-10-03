@@ -6,13 +6,14 @@ import logging
 from .b_instr import *
 from .cb_instr import *
 from .ci_instr import *
+from .ciw_instr import *
 from .cj_instr import *
 from .cl_instr import *
 from .cr_instr import *
 from .cs_instr import *
+from .css_instr import *
 from .i_instr import *
 from .j_instr import *
-from .misc_instr import *
 from .r_instr import *
 from .s_instr import *
 from .u_instr import *

@@ -1,6 +1,6 @@
 # pylint: disable=W0613,R0201,W0221
 from .instruction_patterns import CI_Instruction
-from pyvex.lifting.util import Type, ParseError
+from pyvex.lifting.util import Instruction, Type, ParseError
 from bitstring import BitArray
 
 
@@ -101,3 +101,11 @@ class Instruction_CSLLI(CI_Instruction):
         imm = self.constant(BitArray(bin=data).uint, Type.int_8)
         res = (src1 << imm) & self.constant(0xffffffffffffffff, Type.int_64)
         self.put(res, self.get_dst())
+
+
+class Instruction_NOP(Instruction):
+    bin_format = '0000000000000001'
+    name = 'NOP'
+
+    def match_instruction(self, data, bitstream):
+        return True
