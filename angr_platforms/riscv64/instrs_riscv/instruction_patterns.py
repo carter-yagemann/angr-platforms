@@ -75,7 +75,8 @@ class I_Instruction(RISCV_Instruction):
         self.bin_format = "iiiiiiiIIIIIsssss{0}ddddd{1}".format(self.func3, self.opcode)
         super().__init__(bitstrm, arch, addr)
 
-    #'''In the shift instruction extend this function to also check the last 7 bits of the immediate'''
+    '''In the shift instruction extend this function to also check the last 7
+    bits of the immediate'''
 
     def match_instruction(self, data, bitstream):
         if hasattr(self, "extra_constraints"):
@@ -132,7 +133,7 @@ class S_Instruction(RISCV_Instruction):
             self.extra_constraints(data, bitstream)
         return True
 
-    #'''This is the address + offset'''
+    '''This is the address + offset'''
 
     def get_addr(self):
         addr = self.get(int(self.data['s'], 2), Type.int_64)
@@ -140,7 +141,8 @@ class S_Instruction(RISCV_Instruction):
         offset = BitArray(bin='{0}{1}'.format(self.data['I'], self.data['i'])).int
         return addr + offset
 
-    #'''Value is returned as int32 caller must cast it to store half words or bytes'''
+    '''Value is returned as int64 caller must cast it to store half words or
+    bytes'''
 
     def get_val(self):
         return self.get(int(self.data['S'], 2), Type.int_64)
@@ -183,7 +185,9 @@ class B_Instruction(RISCV_Instruction):
     def get_src2(self):
         return self.get(int(self.data['S'], 2), Type.int_64)
 
-    #''' The offset for B instructions is as follows inst[31]inst[7]inst[30:25]inst[11:8] just had to be carefull with the endianness'''
+    ''' The offset for B instructions is as follows
+    inst[31]inst[7]inst[30:25]inst[11:8] just had to be carefull with the
+    endianness'''
 
     def get_offset(self):
         begin = self.data['i'][0:4]
