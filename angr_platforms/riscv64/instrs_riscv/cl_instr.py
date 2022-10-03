@@ -17,7 +17,7 @@ class Instruction_CLW(CL_Instruction):
 
 
 class Instruction_CLD(CL_Instruction):
-    opcode = '10'
+    opcode = '00'
     func3 = '011'
     name = 'CLD'
 

@@ -30,8 +30,19 @@ class Instruction_CLWSP(CI_Instruction):
 
     def compute_result(self, _):
         bitstr = '{2}{0}{1}00'.format(self.data['I'], self.data['i'][0:3], self.data['i'][3:5])
-        offset = self.constant(BitArray(bin=bitstr).int, Type.int_32)
-        val = self.load(offset + self.get(2, Type.int_32), Type.int_32)
+        offset = self.constant(BitArray(bin=bitstr).int, Type.int_64)
+        val = self.load(offset + self.get(2, Type.int_64), Type.int_32)
+        self.put(val, self.get_dst())
+
+class Instruction_CLDSP(CI_Instruction):
+    opcode = '10'
+    func3 = '011'
+    name = 'CLDSP'
+
+    def compute_result(self, _):
+        bitstr = '{2}{0}{1}000'.format(self.data['I'], self.data['i'][0:2], self.data['i'][2:5])
+        offset = self.constant(BitArray(bin=bitstr).int, Type.int_64)
+        val = self.load(offset + self.get(2, Type.int_64), Type.int_64)
         self.put(val, self.get_dst())
 
 class Instruction_CLI(CI_Instruction):
