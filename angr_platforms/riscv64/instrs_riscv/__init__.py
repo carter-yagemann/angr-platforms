@@ -7,6 +7,7 @@ from .b_instr import *
 from .cb_instr import *
 from .ci_instr import *
 from .cj_instr import *
+from .cl_instr import *
 from .cr_instr import *
 from .cs_instr import *
 from .i_instr import *
@@ -18,7 +19,7 @@ from .u_instr import *
 
 l = logging.getLogger(__name__)
 
-REGISTER_TYPE = Type.int_32
+REGISTER_TYPE = Type.int_64
 BYTE_TYPE = Type.int_8
 INDEX_TYPE = Type.int_16
 

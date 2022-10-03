@@ -1,5 +1,5 @@
 # pylint: disable=W0613,R0201,W0221, W0223
-from .instruction_patterns import RISCV_Instruction, CL_Instruction, CIW_Instruction
+from .instruction_patterns import RISCV_Instruction, CIW_Instruction
 from pyvex.lifting.util import Type, Instruction, ParseError
 from bitstring import BitArray
 
@@ -37,25 +37,14 @@ class Instruction_CSWSP(RISCV_Instruction):
 
     def get_imm(self):
         val = "{0}{1}00".format(self.data['i'][4:6], self.data['i'][0:4])
-        res = self.constant(BitArray(bin=val).int, Type.int_32)
+        res = self.constant(BitArray(bin=val).int, Type.int_64)
         return res
 
     def compute_result(self, src1):
         return src1
 
     def commit_result(self, result):
-        self.store(result, self.get(2, Type.int_32) + self.get_imm())
-
-class Instruction_CLW(CL_Instruction):
-    opcode = '00'
-    func3 = '010'
-    name = 'CLW'
-
-    def compute_result(self, src1, dst_addr):
-        bitstr = '{2}{1}{0}00'.format(self.data['i'][0], self.data['I'], self.data['i'][1])
-        offset = self.constant(BitArray(bin=bitstr).int, Type.int_32)
-        val = self.load(offset + src1, Type.int_32)
-        self.put(val, dst_addr)
+        self.store(result, self.get(2, Type.int_64) + self.get_imm())
 
 
 class Instruction_CADDI4SP(CIW_Instruction):
