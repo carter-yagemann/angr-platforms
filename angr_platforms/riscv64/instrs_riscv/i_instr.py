@@ -221,6 +221,6 @@ class Instruction_ECALL(I_Instruction):
         return_addr = self.addr + self.constant(4, Type.int_64)
         sp_addr = self.get('sp', Type.int_64)
         self.put(self.constant(0xfffffffffffffffc, Type.int_64), 'sp')
-        self.jump(None, self.constant(0x80000180, Type.int_32), JumpKind.Syscall)
+        self.jump(None, self.constant(0x8000000000000180, Type.int_64), JumpKind.Syscall)
         self.put(sp_addr, 'sp')
         return return_addr

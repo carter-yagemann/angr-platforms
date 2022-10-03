@@ -15,8 +15,6 @@ class ArchRISCV(Arch):
         if endness != Endness.LE:
             raise ArchError('Arch RISCV must be little endian')
         super(ArchRISCV, self).__init__(endness)
-        self.call_pushes_ret = False
-        self.branch_delay_slot = False
 
     sizeof = {'short': 16, 'int': 32, 'long': 32, 'long long': 64}
 
@@ -29,18 +27,20 @@ class ArchRISCV(Arch):
     triplet = 'riscv64-linux-gnu'
     max_inst_bytes = 4
 
-    ip_offset = 128  # ip(pc)
-    sp_offset = 8  # sp(x2)
-    bp_offset = 8  # bp(x2)
-    lr_offset = 4  # lr(x1)
-    ret_offset = 40  # a0(x10) For return value
+    ip_offset = 256  # ip(pc)
+    sp_offset = 16   # sp(x2)
+    bp_offset = 16   # bp(x2)
+    lr_offset = 8    # lr(x1)
+    ret_offset = 80  # a0(x10) For return value
 
-    syscall_num_offset = 68
+    self.branch_delay_slot = False
+
+    syscall_num_offset = 136
     # a7(x17) For syscall number
     # According To
     # http://www.cs.uwm.edu/classes/cs315/Bacon/Lecture/HTML/ch05s03.html
     call_pushes_ret = False
-    stack_change = -4
+    stack_change = -8
 
     memory_endness = Endness.LE
     register_endness = Endness.LE
