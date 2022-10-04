@@ -10,7 +10,6 @@ class Instruction_CADDI(CI_Instruction):
     name = 'CADDI'
 
     def extra_constraints(self, data, bitstream):
-
         if data['i'] == '00000' and data['I'] == '0':
             raise ParseError("Immediate can not be 0")
         if data['s'] == '00000':
@@ -22,6 +21,25 @@ class Instruction_CADDI(CI_Instruction):
         val = self.constant(BitArray(bin=bitstr).int, Type.int_64)
         self.put(val.signed + src1, self.get_dst())
 
+class Instruction_CADDIW(CI_Instruction):
+    opcode = '01'
+    func3 = '001'
+    name = 'CADDIW'
+
+    def extra_constraints(self, data, bitstream):
+        if data['i'] == '00000' and data['I'] == '0':
+            raise ParseError("Immediate can not be 0")
+        if data['s'] == '00000':
+            raise ParseError("Destination can not be 0")
+        return data
+
+    def fetch_operands(self):
+        return (self.get(self.get_dst(), Type.int_32),)
+
+    def compute_result(self, src1):
+        bitstr = '{0}{1}'.format(self.data['I'], self.data['i'])
+        val = self.constant(BitArray(bin=bitstr).int, Type.int_32)
+        self.put((val.signed + src1).cast_to(Type.int_64, signed=True), self.get_dst())
 
 class Instruction_CLWSP(CI_Instruction):
     opcode = '10'
