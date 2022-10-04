@@ -69,10 +69,12 @@ class Instruction_CADD(CR_Instruction):
         self.put(src1 + src2, dst)
 
 
-class Instruction_EB(CR_Instruction):
+'''Transfers control to a debugger, which we don't model'''
+
+class Instruction_EBREAK(CR_Instruction):
     opcode = '10'
     func4 = '1001'
-    name = 'EB'
+    name = 'EBREAK'
 
     def extra_constraints(self, data, bitstream):
         if data['d'] != '00000':
@@ -80,5 +82,3 @@ class Instruction_EB(CR_Instruction):
         if data['s'] != '00000':
             raise ParseError('Expected src1 to be 0')
         return data
-
-# no idea what EBreak does so not modelling it for the moment

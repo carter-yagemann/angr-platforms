@@ -90,8 +90,6 @@ class Instruction_SLTI(I_Instruction):
     opcode = '0010011'
     name = 'SLTI'
 
-
-    # TODO: ISA manual mentions sign extension, check if properly implemented
     def compute_result(self, src1, imm):
         src1.is_signed = True
         imm.is_signed = True
@@ -117,7 +115,7 @@ class Instruction_LB(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm.signed
-        value = self.load(addr, Type.int_8).cast_to(Type.int_32)
+        value = self.load(addr, Type.int_8).cast_to(Type.int_64)
         return value.signed
 
 class Instruction_LH(I_Instruction):
@@ -127,7 +125,7 @@ class Instruction_LH(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm
-        value = self.load(addr, Type.int_16).cast_to(Type.int_32)
+        value = self.load(addr, Type.int_16).cast_to(Type.int_64)
         return value.signed
 
 class Instruction_LW(I_Instruction):
@@ -137,7 +135,7 @@ class Instruction_LW(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm.signed
-        value = self.load(addr, Type.int_32)
+        value = self.load(addr, Type.int_64)
         return value.signed
 
 class Instruction_LD(I_Instruction):
@@ -158,7 +156,7 @@ class Instruction_LBU(I_Instruction):
     def compute_result(self, src, imm):
         addr = src + imm.signed
 
-        return self.load(addr, Type.int_8).cast_to(Type.int_32)
+        return self.load(addr, Type.int_8).cast_to(Type.int_64)
 
 class Instruction_LHU(I_Instruction):
     func3='101'
@@ -167,7 +165,7 @@ class Instruction_LHU(I_Instruction):
 
     def compute_result(self, src, imm):
         addr= src+imm.signed
-        return self.load(addr, Type.int_16).cast_to(Type.int_32)
+        return self.load(addr, Type.int_16).cast_to(Type.int_64)
 
 
 class Instruction_JALR(I_Instruction):
@@ -177,7 +175,7 @@ class Instruction_JALR(I_Instruction):
 
     def compute_result(self, src, imm):
         return_addr = self.addr + self.constant(4, Type.int_64)
-        addr = (src + imm.value) & self.constant(0xffff_ffff_ffff_fffe, Type.int_64)
+        addr = src + imm.value
         self.jump(None, addr, JumpKind.Call)
         return return_addr
 

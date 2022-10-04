@@ -15,5 +15,5 @@ class Instruction_CADDI4SPN(CIW_Instruction):
 
     def compute_result(self, dst):
         immstr = '{1}{0}{2}{3}00'.format(self.data['i'][0:2], self.data['i'][2:6], self.data['i'][7], self.data['i'][6])
-        val = self.constant(BitArray(bin=immstr).int, Type.int_32) + self.get(2, Type.int_32)
+        val = self.constant(BitArray(bin=immstr).int, Type.int_64) + self.get(2, Type.int_64)
         self.put(val, dst)

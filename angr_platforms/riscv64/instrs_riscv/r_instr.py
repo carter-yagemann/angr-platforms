@@ -120,7 +120,7 @@ class Instruction_MUL(R_Instruction):
     name='MUL'
 
     def compute_result(self, src1, src2):
-        return (src1*src2) & self.constant(0xFFFF_FFFF_FFFF_FFFF, Type.int_64)
+        return (src1 * src2) & self.constant(0xffffffffffffffff, Type.int_64)
 
 class Instruction_MULH(R_Instruction):
     func3='001'
@@ -129,7 +129,7 @@ class Instruction_MULH(R_Instruction):
     name='MULH'
 
     def compute_result(self, src1, src2):
-        return (src1*src2) >> self.constant(32, Type.int_8)
+        return (src1 * src2) >> self.constant(64, Type.int_8)
 
 class Instruction_MULSU(R_Instruction):
     func3='010'
@@ -140,7 +140,7 @@ class Instruction_MULSU(R_Instruction):
     def compute_result(self, src1, src2):
         src1 = src1.signed
         src2.is_signed = False
-        return (src1*src2) & self.constant(0xFFFF_FFFF_FFFF_FFFF, Type.int_64)
+        return (src1 * src2) & self.constant(0xffffffffffffffff, Type.int_64)
 
 class Instruction_MULHU(R_Instruction):
     func3='011'
@@ -151,7 +151,7 @@ class Instruction_MULHU(R_Instruction):
     def compute_result(self, src1, src2):
         src1.is_signed = False
         src2.is_signed = False
-        return (src1*src2) >> self.constant(32, Type.int_8)
+        return (src1 * src2) >> self.constant(64, Type.int_8)
 
 class Instruction_DIV(R_Instruction):
     func3='100'
@@ -162,7 +162,7 @@ class Instruction_DIV(R_Instruction):
     def compute_result(self, src1, src2):
         src1 = src1.signed
         src2 = src2.signed
-        return src1//src2
+        return src1 // src2
 
 class Instruction_DIVU(R_Instruction):
     func3='101'
@@ -173,7 +173,7 @@ class Instruction_DIVU(R_Instruction):
     def compute_result(self, src1, src2):
         src1.is_signed = False
         src2.is_signed = False
-        return src1//src2
+        return src1 // src2
 
 class Instruction_REM(R_Instruction):
     func3='110'

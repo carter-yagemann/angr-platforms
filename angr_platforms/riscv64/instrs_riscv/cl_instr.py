@@ -13,7 +13,7 @@ class Instruction_CLW(CL_Instruction):
         bitstr = '{2}{1}{0}00'.format(self.data['i'][0], self.data['I'], self.data['i'][1])
         offset = self.constant(BitArray(bin=bitstr).int, Type.int_64)
         val = self.load(offset + src1, Type.int_32)
-        self.put(val, dst_addr)
+        self.put(val.cast_to(Type.int_64, signed=True), dst_addr)
 
 
 class Instruction_CLD(CL_Instruction):

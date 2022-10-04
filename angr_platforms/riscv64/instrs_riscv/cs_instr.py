@@ -18,21 +18,21 @@ class Instruction_CSW(CS_Instruction):
         offset = self.constant(BitArray(bin=imm_str).int, Type.int_64)
         self.store(src1, offset + src2)
 
+    def commit_result(self, res):
+        pass
+
 class Instruction_CSD(CS_Instruction):
     opcode = '00'
     func3 = '111'
     name = 'CSD'
-
-    def fetch_operands(self):
-        src1 = self.get(int(self.data['s'], 2) + 8, Type.int_64)
-        src2 = self.get(int(self.data['S'], 2) + 8, Type.int_64)
-        return src1, src2
 
     def compute_result(self, src1, src2):
         imm_str = "{1}{0}000".format(self.data['I'], self.data['i'])
         offset = self.constant(BitArray(bin=imm_str).int, Type.int_64)
         self.store(src1, offset + src2)
 
+    def commit_result(self, res):
+        pass
 
 class Instruction_CSUB(CS_Instruction):
     opcode = '01'

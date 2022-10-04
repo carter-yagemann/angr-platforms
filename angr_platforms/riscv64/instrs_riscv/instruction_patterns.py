@@ -196,7 +196,7 @@ class B_Instruction(RISCV_Instruction):
         sign = self.data['I'][0]
         offset = "{3}{2}{1}{0}0".format(begin, middle, x, sign)
         b = BitArray(bin=offset)
-        val = self.constant(b.int, Type.int_32)
+        val = self.constant(b.int, Type.int_64)
         return val.signed
 
     def fetch_operands(self):
@@ -263,8 +263,6 @@ class J_Instruction(RISCV_Instruction):
 
     def get_dst(self):
         return int(self.data['d'], 2)
-
-    #Some weird way to parse the immediate according to risc-v isa
 
     def get_imm(self):
         i = self.data['i']
@@ -484,8 +482,6 @@ class CB_Instruction(RISCV_Instruction):
     opcode = NotImplemented
     func3 = NotImplemented
 
-    bin_format = 'fffIIIsssOOOOOoo'
-
     bin_format = NotImplemented
 
     def __init__(self, bitstrm, arch, addr):
@@ -511,8 +507,6 @@ class CJ_Instruction(RISCV_Instruction):
     '''
     opcode = NotImplemented
     func3 = NotImplemented
-
-    bin_format = 'fffjjjjjjjjjjjoo'
 
     bin_format = NotImplemented
 

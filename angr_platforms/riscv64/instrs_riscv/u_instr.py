@@ -7,11 +7,13 @@ class Instruction_LUI(U_Instruction):
     name='LUI'
 
     def compute_result(self, _, imm):
-        return (imm << self.constant(12, Type.int_8)) & self.constant(0xffffffff, Type.int_32)
+        ui = (imm << self.constant(12, Type.int_8)) & self.constant(0xffffffff, Type.int_32)
+        return ui.cast_to(Type.int_64, signed=True)
 
 class Instruction_AUIPC(U_Instruction):
     opcode='0010111'
     name='AUIPC'
 
     def compute_result(self, _ , imm):
-        return self.addr + (imm << self.constant(12, Type.int_8))
+        ui = (imm << self.constant(12, Type.int_8)) & self.constant(0xffffffff, Type.int_32)
+        return self.addr + ui.cast_to(Type.int_64, signed=True)

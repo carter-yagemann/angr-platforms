@@ -9,8 +9,8 @@ class Instruction_CBEQZ(CB_Instruction):
     name = 'CBEQZ'
 
     def compute_result(self, src1):
-        imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3], self.data["O"][4], self.data['O'][0:2],
-                                       self.data['I'][0])
+        imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3],
+                self.data["O"][4], self.data['O'][0:2], self.data['I'][0])
         offset = self.constant(BitArray(bin=imm).int, Type.int_64)
         addr = self.addr + offset
         self.jump(src1 == self.constant(0, Type.int_64), addr)
@@ -22,8 +22,8 @@ class Instruction_CBNEZ(CB_Instruction):
     name = 'CBNEZ'
 
     def compute_result(self, src1):
-        imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3], self.data["O"][4], self.data['O'][0:2],
-                                       self.data['I'][0])
+        imm = "{4}{3}{2}{1}{0}0".format(self.data['O'][2:4], self.data['I'][1:3],
+                self.data["O"][4], self.data['O'][0:2], self.data['I'][0])
         offset = self.constant(BitArray(bin=imm).int, Type.int_64)
         addr = self.addr + offset
         self.jump(src1 != self.constant(0, Type.int_64), addr)
