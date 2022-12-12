@@ -48,7 +48,7 @@ class ArchRISCV(Arch):
 
     if _capstone:
         cs_arch = _capstone.CS_ARCH_RISCV
-        cs_mode = _capstone.CS_MODE_RISCV64
+        cs_mode = _capstone.CS_MODE_RISCVC
 
 
     # TODO: Currently keystone, unicorn DON'T support RISC-V
