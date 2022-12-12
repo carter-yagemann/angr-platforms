@@ -12,6 +12,16 @@ class Instruction_ADDI(I_Instruction):
         return src1 + imm.signed
 
 
+class Instruction_ADDIW(I_Instruction):
+    func3 = '000'
+    opcode = '0011011'
+    name = 'ADDIW'
+
+    def compute_result(self, src1, imm):
+        val = ((src1 & 0xffffffff) + imm.signed) & 0xffffffff
+        return val.cast_to(Type.int_64, signed=True)
+
+
 class Instruction_XORI(I_Instruction):
     func3 = '100'
     opcode = '0010011'
