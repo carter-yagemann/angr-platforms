@@ -27,8 +27,6 @@ class Instruction_CADDIW(CI_Instruction):
     name = 'CADDIW'
 
     def extra_constraints(self, data, bitstream):
-        if data['i'] == '00000' and data['I'] == '0':
-            raise ParseError("Immediate can not be 0")
         if data['s'] == '00000':
             raise ParseError("Destination can not be 0")
         return data
