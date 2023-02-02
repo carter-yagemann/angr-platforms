@@ -151,7 +151,7 @@ class Instruction_LW(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm.signed
-        value = self.load(addr, Type.int_64)
+        value = self.load(addr, Type.int_32)   #Changed this
         return value.signed
 
 class Instruction_LD(I_Instruction):
