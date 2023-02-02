@@ -1,6 +1,7 @@
 # pylint: disable=W0613,R0201,W0221,W0223
 from .instruction_patterns import I_Instruction
 from pyvex.lifting.util import Type, ParseError, JumpKind
+from bitstring import BitArray
 
 
 class Instruction_ADDI(I_Instruction):
@@ -51,48 +52,53 @@ class Instruction_ANDI(I_Instruction):
 
 class Instruction_SLLI(I_Instruction):
     func3 = '001'
-    func7 = '0000000'
+    func7 = '000000'
     opcode = '0010011'
     name = 'SLLI'
 
     def extra_constraints(self, data, bitstream):
-        if (data['i'] != self.func7):
+        if (data['i'][0:6] != self.func7):
             raise ParseError("The func7 did not match")
         return data
 
     def compute_result(self, src1, _):
-        return (src1 << self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
+        return (src1 << self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SRLI(I_Instruction):
     func3 = '101'
-    func7 = '0000000'
+    func7 = '000000'
     opcode = '0010011'
     name = "SRLI"
 
     def extra_constraints(self, data, bitstream):
-        if (data['i'] != self.func7):
+        if (data['i'][0:6] != self.func7):
             raise ParseError("The func7 did not match")
         return data
 
     def compute_result(self, src1, _):
-        return (src1 >> self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
+        # return (src1 >> self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
+        return ((src1 % 0x10000000000000000) >> self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 # Once again issue with arithmetic right shifts, so for the moment still a TODO like SRA
 class Instruction_SRAI(I_Instruction):
     func3 = '101'
-    func7 = '0100000'
+    func7 = '010000'
     opcode = '0010011'
     name = "SRAI"
 
     def extra_constraints(self, data, bitstream):
-        if (data['i'] != self.func7):
+        if (data['i'][0:6] != self.func7):
             raise ParseError("The func7 did not match")
         return data
 
     def compute_result(self, src1, _):
-        return (~((~src1) >> self.get_shift_amount())) & self.constant(0xffffffffffffffff, Type.int_64)
+        # for i in range(BitArray(bin=self.data['I']).int):
+        #     result = ( (src1 & self.constant(0xffffffffffffffff, Type.int_64)) >> self.constant(1, Type.int_64) )
+            # result[63] = result [62]
+        return (src1 >> self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
+        #return (~((~src1) >> self.get_shift_amount())) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
 class Instruction_SLTI(I_Instruction):

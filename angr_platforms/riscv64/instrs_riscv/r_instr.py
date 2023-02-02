@@ -59,7 +59,7 @@ class Instruction_SLL(R_Instruction):
     name = 'SLL'
 
     def compute_result(self, src1, src2):
-        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
         return (src1 << shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
@@ -70,8 +70,8 @@ class Instruction_SRL(R_Instruction):
     name = 'SRL'
 
     def compute_result(self, src1, src2):
-        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
-        return (src1 >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
+        return ((src1 % 0x10000000000000000) >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
 
 # Arithmetic shift is not easily mapped, so leaving this as an TODO
 
@@ -83,9 +83,44 @@ class Instruction_SRA(R_Instruction):
     name = 'SRA'
 
     def compute_result(self, src1, src2):
-        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)
-        return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
+        return (src1 >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+        #return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
 
+class Instruction_SLLW(R_Instruction):
+    func3 = '001'
+    func7 = '0000000'
+    opcode = '0111011'
+    name = 'SLL'
+
+    def compute_result(self, src1, src2):
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[4:]
+        return ((src1 & self.constant(0xffffffff, Type.int_32)) << shftamnt) & self.constant(0xffffffff, Type.int_32)
+
+
+class Instruction_SRLW(R_Instruction):
+    func3 = '101'
+    func7 = '0000000'
+    opcode = '0111011'
+    name = 'SRL'
+
+    def compute_result(self, src1, src2):
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8) 
+        return (((src1 & self.constant(0xffffffff, Type.int_32)) % 0x100000000) >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+
+# Arithmetic shift is not easily mapped, so leaving this as an TODO
+
+
+class Instruction_SRAW(R_Instruction):
+    func3 = '101'
+    func7 = '0100000'
+    opcode = '0111011'
+    name = 'SRA'
+
+    def compute_result(self, src1, src2):
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8) 
+        return ((src1 & self.constant(0xffffffff, Type.int_32)) >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+        #return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
 
 class Instruction_SLT(R_Instruction):
     func3 = '010'
