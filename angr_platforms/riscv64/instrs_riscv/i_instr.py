@@ -131,7 +131,7 @@ class Instruction_LB(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm.signed
-        value = self.load(addr, Type.int_8).cast_to(Type.int_64)
+        value = self.load(addr, Type.int_8).cast_to(Type.int_64, signed=True)
         return value.signed
 
 class Instruction_LH(I_Instruction):
@@ -141,7 +141,7 @@ class Instruction_LH(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm
-        value = self.load(addr, Type.int_16).cast_to(Type.int_64)
+        value = self.load(addr, Type.int_16).cast_to(Type.int_64, signed=True)
         return value.signed
 
 class Instruction_LW(I_Instruction):
@@ -151,7 +151,7 @@ class Instruction_LW(I_Instruction):
 
     def compute_result(self, src, imm):
         addr = src + imm.signed
-        value = self.load(addr, Type.int_32)   #Changed this
+        value = self.load(addr, Type.int_32).cast_to(Type.int_64, signed=True)   #Changed this
         return value.signed
 
 class Instruction_LD(I_Instruction):
@@ -182,6 +182,15 @@ class Instruction_LHU(I_Instruction):
     def compute_result(self, src, imm):
         addr= src+imm.signed
         return self.load(addr, Type.int_16).cast_to(Type.int_64)
+
+class Instruction_LWU(I_Instruction):
+    func3='110'
+    opcode='0000011'
+    name="LWU"
+
+    def compute_result(self, src, imm):
+        addr= src+imm.signed
+        return self.load(addr, Type.int_32).cast_to(Type.int_64)
 
 
 class Instruction_JALR(I_Instruction):
