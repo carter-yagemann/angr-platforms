@@ -59,7 +59,10 @@ class Instruction_CSRLI(CB_Instruction):
         return data
 
     def compute_result(self, src1):
-        shftamnt = self.constant(BitArray(bin=self.data['O']).uint, Type.int_8)
+        num_low = BitArray(bin=self.data['O']).uint
+        num_high = BitArray(bin=self.data['I']).uint
+        num = ((num_high << 3) & 0b100000) | num_low
+        shftamnt = self.constant(num, Type.int_8)
         result = (src1 >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
         dst = int(self.data['s'], 2) + 8
         self.put(result, dst)
@@ -78,7 +81,11 @@ class Instruction_CSRAI(CB_Instruction):
 
     # Once again not don't know how to do the arithmetic shift
     def compute_result(self, src1):
-        shftamnt = self.constant(BitArray(bin=self.data['O']).uint, Type.int_8)
-        result = (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
+        num_low = BitArray(bin=self.data['O']).uint
+        num_high = BitArray(bin=self.data['I']).uint
+        num = ((num_high << 3) & 0b100000) | num_low
+        shftamnt = self.constant(num, Type.int_8)
+        #result = (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
+        result = ((src1 % 0x10000000000000000) >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
         dst = int(self.data['s'], 2) + 8
         self.put(result, dst)

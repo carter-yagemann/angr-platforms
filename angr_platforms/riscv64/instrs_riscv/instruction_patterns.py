@@ -98,6 +98,12 @@ class I_Instruction(RISCV_Instruction):
         num = BitArray(bin=self.data['I']).int
         return self.constant(num, Type.int_8)
 
+    def get_shift_amount_6bits(self):
+        num_high = BitArray(bin=self.data['i']).int
+        num_low = BitArray(bin=self.data['I']).int
+        num = ((num_high << 5) | num_low) & 0x03f 
+        return self.constant(num, Type.int_8)
+
     def get_optional_func7(self):
         return self.data['i']
 
