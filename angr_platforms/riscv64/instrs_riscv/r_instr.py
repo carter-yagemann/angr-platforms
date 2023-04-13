@@ -104,6 +104,7 @@ class Instruction_SRA(R_Instruction):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
         return (src1 >> shftamnt) & self.constant(0xffffffff, Type.int_32)
 
+
 class Instruction_SLLW(R_Instruction):
     func3 = '001'
     func7 = '0000000'
@@ -135,6 +136,7 @@ class Instruction_SRAW(R_Instruction):
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8)
         return ((src1 & self.constant(0xffffffff, Type.int_32)) >> shftamnt) & self.constant(0xffffffff, Type.int_32)
+
 
 class Instruction_SLT(R_Instruction):
     func3 = '010'

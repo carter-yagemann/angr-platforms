@@ -92,7 +92,6 @@ class Instruction_SRLI(I_Instruction):
         return data
 
     def compute_result(self, src1, _):
-        # return (src1 >> self.get_shift_amount()) & self.constant(0xffffffffffffffff, Type.int_64)
         return ((src1 % 0x10000000000000000) >> self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
