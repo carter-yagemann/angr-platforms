@@ -12,6 +12,16 @@ class Instruction_ADD(R_Instruction):
         return src1 + src2
 
 
+class Instruction_ADDW(R_Instruction):
+    func3 = '000'
+    func7 = '0000000'
+    opcode = '0111011'
+    name = 'ADDW'
+
+    def compute_result(self, src1, src2):
+        return ((src1 + src2) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
+
 class Instruction_SUB(R_Instruction):
     func3 = '000'
     func7 = '0100000'
@@ -20,6 +30,16 @@ class Instruction_SUB(R_Instruction):
 
     def compute_result(self, src1, src2):
         return src1 - src2
+
+
+class Instruction_SUBW(R_Instruction):
+    func3 = '000'
+    func7 = '0100000'
+    opcode = '0111011'
+    name = 'SUBW'
+
+    def compute_result(self, src1, src2):
+        return ((src1 - src2) & 0xffffffff).cast_to(Type.int_64, signed=True)
 
 
 class Instruction_XOR(R_Instruction):
