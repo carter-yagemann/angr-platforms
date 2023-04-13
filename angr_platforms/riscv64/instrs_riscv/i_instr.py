@@ -65,6 +65,21 @@ class Instruction_SLLI(I_Instruction):
         return (src1 << self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
+class Instruction_SLLIW(I_Instruction):
+    func3 = '001'
+    func7 = '000000'
+    opcode = '0011011'
+    name = 'SLLIW'
+
+    def extra_constraints(self, data, bitstream):
+        if (data['i'][0:6] != self.func7):
+            raise ParseError("The func7 did not match")
+        return data
+
+    def compute_result(self, src1, _):
+        return ((src1 << self.get_shift_amount_6bits()) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
+
 class Instruction_SRLI(I_Instruction):
     func3 = '101'
     func7 = '000000'
@@ -81,7 +96,21 @@ class Instruction_SRLI(I_Instruction):
         return ((src1 % 0x10000000000000000) >> self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
 
 
-# Once again issue with arithmetic right shifts, so for the moment still a TODO like SRA
+class Instruction_SRLIW(I_Instruction):
+    func3 = '101'
+    func7 = '000000'
+    opcode = '0011011'
+    name = "SRLIW"
+
+    def extra_constraints(self, data, bitstream):
+        if (data['i'][0:6] != self.func7):
+            raise ParseError("The func7 did not match")
+        return data
+
+    def compute_result(self, src1, _):
+        return (((src1 % 0x10000000000000000) >> self.get_shift_amount_6bits()) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
+
 class Instruction_SRAI(I_Instruction):
     func3 = '101'
     func7 = '010000'
@@ -94,11 +123,22 @@ class Instruction_SRAI(I_Instruction):
         return data
 
     def compute_result(self, src1, _):
-        # for i in range(BitArray(bin=self.data['I']).int):
-        #     result = ( (src1 & self.constant(0xffffffffffffffff, Type.int_64)) >> self.constant(1, Type.int_64) )
-            # result[63] = result [62]
         return (src1 >> self.get_shift_amount_6bits()) & self.constant(0xffffffffffffffff, Type.int_64)
-        #return (~((~src1) >> self.get_shift_amount())) & self.constant(0xffffffffffffffff, Type.int_64)
+
+
+class Instruction_SRAIW(I_Instruction):
+    func3 = '101'
+    func7 = '010000'
+    opcode = '0011011'
+    name = "SRAIW"
+
+    def extra_constraints(self, data, bitstream):
+        if (data['i'][0:6] != self.func7):
+            raise ParseError("The func7 did not match")
+        return data
+
+    def compute_result(self, src1, _):
+        return ((src1 >> self.get_shift_amount_6bits()) & 0xffffffff).cast_to(Type.int_64, signed=True)
 
 
 class Instruction_SLTI(I_Instruction):
