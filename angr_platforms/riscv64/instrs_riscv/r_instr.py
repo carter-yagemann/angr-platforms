@@ -73,8 +73,6 @@ class Instruction_SRL(R_Instruction):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
         return ((src1 % 0x10000000000000000) >> shftamnt) & self.constant(0xffffffffffffffff, Type.int_64)
 
-# Arithmetic shift is not easily mapped, so leaving this as an TODO
-
 
 class Instruction_SRA(R_Instruction):
     func3 = '101'
@@ -85,7 +83,6 @@ class Instruction_SRA(R_Instruction):
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[5:] #RV64 USES ONLY THE LOW 6 BITS OF RS2
         return (src1 >> shftamnt) & self.constant(0xffffffff, Type.int_32)
-        #return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
 
 class Instruction_SLLW(R_Instruction):
     func3 = '001'
@@ -105,10 +102,8 @@ class Instruction_SRLW(R_Instruction):
     name = 'SRL'
 
     def compute_result(self, src1, src2):
-        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8) 
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8)
         return (((src1 & self.constant(0xffffffff, Type.int_32)) % 0x100000000) >> shftamnt) & self.constant(0xffffffff, Type.int_32)
-
-# Arithmetic shift is not easily mapped, so leaving this as an TODO
 
 
 class Instruction_SRAW(R_Instruction):
@@ -118,9 +113,8 @@ class Instruction_SRAW(R_Instruction):
     name = 'SRA'
 
     def compute_result(self, src1, src2):
-        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8) 
+        shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8)
         return ((src1 & self.constant(0xffffffff, Type.int_32)) >> shftamnt) & self.constant(0xffffffff, Type.int_32)
-        #return (~((~src1) >> shftamnt)) & self.constant(0xffffffffffffffff, Type.int_64)
 
 class Instruction_SLT(R_Instruction):
     func3 = '010'
@@ -188,6 +182,15 @@ class Instruction_MULHU(R_Instruction):
         src2.is_signed = False
         return (src1 * src2) >> self.constant(64, Type.int_8)
 
+class Instruction_MULW(R_Instruction):
+    func3='000'
+    func7='0000001'
+    opcode='0111011'
+    name='MULW'
+
+    def compute_result(self, src1, src2):
+        return ((src1 * src2) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
 class Instruction_DIV(R_Instruction):
     func3='100'
     func7='0000001'
@@ -210,6 +213,26 @@ class Instruction_DIVU(R_Instruction):
         src2.is_signed = False
         return src1 // src2
 
+class Instruction_DIVW(R_Instruction):
+    func3='100'
+    func7='0000001'
+    opcode='0111011'
+    name='DIVW'
+
+    def compute_result(self, src1, src2):
+        return (((src1.signed & 0xffffffff) // (src2.signed & 0xffffffff, Type.int_32)) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
+class Instruction_DIVUW(R_Instruction):
+    func3='101'
+    func7='0000001'
+    opcode='0111011'
+    name='DIVUW'
+
+    def compute_result(self, src1, src2):
+        src1.is_signed = False
+        src2.is_signed = False
+        return (((src1 & 0xffffffff) // (src2 & 0xffffffff)) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
 class Instruction_REM(R_Instruction):
     func3='110'
     func7='0000001'
@@ -229,3 +252,23 @@ class Instruction_REMU(R_Instruction):
         src1.is_signed = False
         src2.is_signed = False
         return src1 % src2
+
+class Instruction_REMW(R_Instruction):
+    func3='110'
+    func7='0000001'
+    opcode='0111011'
+    name='REMW'
+
+    def compute_result(self, src1, src2):
+        return (((src1.signed & 0xffffffff) % (src2.signed & 0xffffffff)) & 0xffffffff).cast_to(Type.int_64, signed=True)
+
+class Instruction_REMUW(R_Instruction):
+    func3='111'
+    func7='0000001'
+    opcode='0111011'
+    name='REMUW'
+
+    def compute_result(self, src1, src2):
+        src1.is_signed = False
+        src2.is_signed = False
+        return (((src1 & 0xffffffff) % (src2 & 0xffffffff)) & 0xffffffff).cast_to(Type.int_64, signed=True)
