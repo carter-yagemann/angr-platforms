@@ -88,7 +88,7 @@ class Instruction_SLLW(R_Instruction):
     func3 = '001'
     func7 = '0000000'
     opcode = '0111011'
-    name = 'SLL'
+    name = 'SLLW'
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)[4:]
@@ -99,7 +99,7 @@ class Instruction_SRLW(R_Instruction):
     func3 = '101'
     func7 = '0000000'
     opcode = '0111011'
-    name = 'SRL'
+    name = 'SRLW'
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8)
@@ -110,7 +110,7 @@ class Instruction_SRAW(R_Instruction):
     func3 = '101'
     func7 = '0100000'
     opcode = '0111011'
-    name = 'SRA'
+    name = 'SRAW'
 
     def compute_result(self, src1, src2):
         shftamnt = self.get(int(self.data['S'], 2), Type.int_8)& self.constant(0b11111, Type.int_8)
