@@ -131,16 +131,16 @@ class Instruction_MULH(R_Instruction):
     def compute_result(self, src1, src2):
         return (src1*src2) >> self.constant(32, Type.int_8)
 
-class Instruction_MULSU(R_Instruction):
+class Instruction_MULHSU(R_Instruction):
     func3='010'
     func7='0000001'
     opcode='0110011'
-    name='MULSU'
+    name='MULHSU'
 
     def compute_result(self, src1, src2):
         src1 = src1.signed
         src2.is_signed = False
-        return (src1*src2) & self.constant(0xFFFF_FFFF, Type.int_32)
+        return (src1*src2) >> self.constant(32, Type.int_8)
 
 class Instruction_MULHU(R_Instruction):
     func3='011'
