@@ -27,5 +27,5 @@ class SimRISCVSyscall(SimCC):
     def syscall_num(state):
         return state.regs.a7
 
-register_syscall_cc('RISCV', 'Linux', SimRISCVSyscall)
-register_default_cc('RISCV', SimCCRISCV)
+register_syscall_cc('RISCV64', 'Linux', SimRISCVSyscall)
+register_default_cc('RISCV64', SimCCRISCV)
